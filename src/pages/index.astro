@@ -2,24 +2,34 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import CallBand from '../components/CallBand.astro';
 import AreaList from '../components/AreaList.astro';
-import { site, reviews } from '../data/site.js';
+import Kicker from '../components/Kicker.astro';
+import Promises from '../components/Promises.astro';
+import Process from '../components/Process.astro';
+import Faq from '../components/Faq.astro';
+import { site, reviews, stats } from '../data/site.js';
 import { services } from '../data/services.js';
 ---
 <BaseLayout
   title="One Stop Rooter Plumbing | 24/7 Plumbing & Drain Cleaning, Lower Mainland"
   description="Family-owned 24/7 plumber in Burnaby, BC. Drain cleaning, sewer lines, water heaters and emergency plumbing across the Lower Mainland. No overtime fees. Call 604-681-1100."
   active="home"
+  faq
 >
-  <section class="two-col dark">
+  <section class="two-col dark hero">
     <div class="hero-text">
-      <p class="eyebrow">Burnaby, BC. Open 24 hours, 7 days a week.</p>
+      <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span>Burnaby, BC. Open 24 hours, 7 days a week.</p>
       <h1 class="head h-hero">24/7 plumbing &amp; drain cleaning in the Lower Mainland</h1>
       <a class="big-phone" href={site.phoneHref}>{site.phone}</a>
       <div class="btn-row">
         <a class="btn btn-red" href={site.phoneHref}>Call now, we pick up</a>
         <a class="estimate-link" href="/contact/">Or book a free estimate</a>
       </div>
-      <p class="trust">Licensed and insured. Same-day service. Free estimates and senior discounts. Family-owned and operated.</p>
+      <ul class="checks">
+        <li>Licensed &amp; insured</li>
+        <li>Same-day service</li>
+        <li>Free estimates</li>
+        <li>Senior discounts</li>
+      </ul>
     </div>
     <div class="photo">
       <img
@@ -31,30 +41,30 @@ import { services } from '../data/services.js';
     </div>
   </section>
 
-  <section class="promises red">
-    <div>
-      <h2 class="head">No hidden charges. No overtime fees.</h2>
-      <p>The price is the same at 2 in the morning as it is at 2 in the afternoon.</p>
-    </div>
-    <div>
-      <h2 class="head">Free inspection</h2>
-      <p>We check for hidden problems and explain every option and price before any work starts.</p>
-    </div>
-    <div>
-      <h2 class="head">Licensed, bonded &amp; insured</h2>
-      <p>Certified plumbers on every job, for homes and businesses.</p>
-    </div>
+  <section class="stats" aria-label="At a glance">
+    {stats.map((s) => (
+      <div class="stat">
+        <span class="stat-value">{s.value}</span>
+        <span class="stat-label">{s.label}</span>
+      </div>
+    ))}
   </section>
+
+  <Promises />
 
   <section class="section" id="services">
     <div class="intro-row">
-      <h2 class="head h-xl">Fast, reliable plumbing you can trust</h2>
+      <div>
+        <Kicker num="01">Services</Kicker>
+        <h2 class="head h-xl">Fast, reliable plumbing you can trust</h2>
+      </div>
       <p class="lead">From a slow kitchen drain to a burst water line, one call gets it handled. Residential and commercial, anywhere in the Lower Mainland.</p>
     </div>
     <ul class="service-grid">
-      {services.map((s) => (
+      {services.map((s, i) => (
         <li>
-          <a class="service-tile" href={`/services/${s.slug}/`}>
+          <a class:list={['service-tile', { 'service-tile-urgent': s.slug === 'emergency-plumbing' }]} href={`/services/${s.slug}/`}>
+            <span class="tile-num">{String(i + 1).padStart(2, '0')}</span>
             <h3>{s.name}</h3>
             <p>{s.card}</p>
             <span class="more">See details</span>
@@ -66,13 +76,17 @@ import { services } from '../data/services.js';
 
   <section class="section dark">
     <div class="intro-row reviews-intro">
-      <h2 class="head h-xl">Family-owned since 2001</h2>
+      <div>
+        <Kicker num="02" light>Reviews</Kicker>
+        <h2 class="head h-xl">Family-owned since 2001</h2>
+      </div>
       <p>Over <strong>25 years</strong> of homeowners and businesses across the Lower Mainland calling us back.</p>
     </div>
     <div class="review-grid">
       {reviews.map((r) => (
         <figure class="review">
-          <blockquote>“{r.text}”</blockquote>
+          <span class="quote-mark" aria-hidden="true">“</span>
+          <blockquote>{r.text}</blockquote>
           <figcaption>{r.who}</figcaption>
         </figure>
       ))}
@@ -82,13 +96,18 @@ import { services } from '../data/services.js';
     )}
   </section>
 
+  <Process num="03" />
+
   <section class="section grey areas-section">
     <div>
+      <Kicker num="04">Service area</Kicker>
       <h2 class="head h-lg">Where we work</h2>
       <p class="intro-text">Based in Burnaby and on the road across the Lower Mainland. Don't see your city? Call anyway.</p>
     </div>
     <AreaList />
   </section>
+
+  <Faq num="05" />
 
   <CallBand title="2 in the afternoon or 2 in the morning, we answer." />
 </BaseLayout>

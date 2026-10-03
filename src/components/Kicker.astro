@@ -1,0 +1,5 @@
+---
+// Small numbered label above a section heading, e.g. "01  Services".
+const { num, light = false } = Astro.props;
+---
+<p class:list={['kicker', { 'kicker-light': light }]}><span class="kicker-num">{num}</span><slot /></p>

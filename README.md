@@ -14,7 +14,7 @@ A static website built with [Astro](https://astro.build), from the design handof
 ## Where to change things
 
 - **Phone number, Google reviews link, privacy policy link:** `src/data/site.js`
-- **Service area cities and review quotes:** `src/data/site.js`
+- **Service area cities, review quotes, stats, promises, "How it works" steps, FAQs:** `src/data/site.js`
 - **All service page text:** `src/data/services.js` (one block per service)
 - **Colours, fonts, spacing:** `src/styles/global.css` (colours are at the top)
 - **Header, footer, mobile menu, SEO tags:** `src/layouts/BaseLayout.astro`

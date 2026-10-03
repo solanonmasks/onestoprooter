@@ -1,0 +1,11 @@
+---
+import { promises } from '../data/site.js';
+---
+<section class="promises red">
+  {promises.map((p) => (
+    <div class="promise">
+      <h2 class="head">{p.title}</h2>
+      <p>{p.text}</p>
+    </div>
+  ))}
+</section>

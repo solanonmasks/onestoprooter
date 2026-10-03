@@ -1,0 +1,25 @@
+---
+// "How it works" - three numbered steps.
+import Kicker from './Kicker.astro';
+import { steps } from '../data/site.js';
+
+const { num = '03' } = Astro.props;
+---
+<section class="section process">
+  <div class="intro-row">
+    <div>
+      <Kicker num={num}>How it works</Kicker>
+      <h2 class="head h-xl">One call. Done right.</h2>
+    </div>
+    <p class="lead">No call centre, no runaround. Here is what happens when you pick up the phone.</p>
+  </div>
+  <ol class="step-grid">
+    {steps.map((step, i) => (
+      <li class="step">
+        <span class="step-num">{String(i + 1).padStart(2, '0')}</span>
+        <h3>{step.title}</h3>
+        <p>{step.text}</p>
+      </li>
+    ))}
+  </ol>
+</section>

@@ -1,7 +1,9 @@
 /* ==========================================================
    One Stop Rooter Plumbing - site styles
    Rules from the design handoff: no rounded corners, no shadows,
-   no gradients, no animations. Tiles are separated by an 8px gap.
+   no gradients. Tiles are separated by an 8px gap.
+   Only quick colour fades on hover (turned off for people who
+   ask their device for reduced motion).
    ========================================================== */
 
 :root {
@@ -543,6 +545,11 @@ h1, h2, h3, p, ul, figure, blockquote {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
   gap: 8px;
 }
+@media (min-width: 1024px) {
+  .service-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 .service-tile {
   background: var(--grey);
   padding: 28px 28px 24px;
@@ -597,6 +604,17 @@ h1, h2, h3, p, ul, figure, blockquote {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+.review {
+  border-top: 4px solid var(--red);
+}
+.quote-mark {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 96px;
+  line-height: 0.6;
+  height: 40px;
+  color: var(--red-light);
 }
 .review blockquote {
   font-size: 22px;
@@ -660,9 +678,11 @@ h1, h2, h3, p, ul, figure, blockquote {
 .sign-grid li {
   background: var(--grey);
   padding: 28px;
-  min-height: 150px;
+  min-height: 170px;
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 24px;
   font-family: var(--font-head);
   font-weight: 800;
   text-transform: uppercase;
@@ -670,8 +690,13 @@ h1, h2, h3, p, ul, figure, blockquote {
   line-height: 0.95;
 }
 
-.sub-grid {
+.subs-section {
   padding: 0 var(--pad-x) clamp(56px, 7vw, 104px);
+}
+.subs-section h2 {
+  margin-bottom: 36px;
+}
+.sub-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
   gap: 8px;
@@ -813,4 +838,274 @@ h1, h2, h3, p, ul, figure, blockquote {
 
 .estimate-link {
   font-weight: 600;
+}
+
+/* ==========================================================
+   Polish pass
+   ========================================================== */
+
+.head {
+  letter-spacing: -0.005em;
+}
+.big-phone,
+.btn-phone,
+.header-call .l2,
+.stat-value {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Quick colour fades on hover */
+a,
+button,
+.service-tile,
+.service-tile * {
+  transition: background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+  }
+}
+
+/* Thin strip above the header */
+.top-strip {
+  background: var(--red);
+  color: var(--white);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 32px;
+  padding: 8px var(--pad-x);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.top-strip > span {
+  display: inline-flex;
+  align-items: center;
+}
+@media (max-width: 1023.98px) {
+  /* On phones, only the first item fits */
+  .top-strip > span + span {
+    display: none;
+  }
+}
+
+/* Green "open" dot */
+.live-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  background: oklch(0.8 0.2 145);
+  border-radius: 50%;
+  flex: none;
+}
+
+/* Numbered label above headings */
+.kicker {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+.kicker::before {
+  content: '';
+  width: 32px;
+  height: 3px;
+  background: currentColor;
+}
+.kicker-num {
+  order: -1;
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 18px;
+}
+.kicker-light {
+  color: var(--red-light);
+}
+
+/* Tick list in the hero */
+.checks {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-weight: 600;
+  color: var(--grey-text-1);
+}
+.checks li::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 10px;
+  vertical-align: middle;
+  background: var(--red-light);
+}
+
+/* Stats strip under the home hero */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+  gap: 8px;
+  background: var(--black);
+  padding: 0 var(--pad-x) 8px;
+}
+.stat {
+  background: var(--dark-tile);
+  color: var(--white);
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.stat-value {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: clamp(48px, 5vw, 72px);
+  line-height: 0.9;
+  color: var(--red-light);
+}
+.stat-label {
+  font-weight: 600;
+  color: var(--grey-text-1);
+}
+
+/* Red promise band: thin divider line above each promise */
+.promise {
+  border-top: 3px solid rgb(255 255 255 / 0.35);
+  padding-top: 20px;
+}
+
+/* Service tiles */
+.tile-num {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 18px;
+  color: var(--red);
+  letter-spacing: 0.04em;
+}
+.service-tile:hover .tile-num {
+  color: var(--white);
+}
+.service-tile-urgent {
+  background: var(--black);
+  color: var(--white);
+}
+.service-tile-urgent .tile-num {
+  color: var(--red-light);
+}
+.service-tile {
+  min-height: 240px;
+}
+.service-tile p {
+  margin-bottom: 8px;
+}
+
+/* How it works */
+.step-grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+  gap: 8px;
+}
+.step {
+  background: var(--grey);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  border-top: 4px solid var(--red);
+}
+.step-num {
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 64px;
+  line-height: 0.85;
+  color: var(--red);
+}
+.step h3 {
+  font-family: var(--font-head);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 34px;
+  line-height: 0.95;
+}
+
+/* FAQ */
+.faq-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));
+  gap: 32px 64px;
+  align-items: start;
+}
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.faq {
+  background: var(--grey);
+}
+.faq summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 22px 24px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+}
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+.faq summary::after {
+  content: '+';
+  flex: none;
+  font-family: var(--font-head);
+  font-weight: 900;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--red);
+}
+.faq[open] summary::after {
+  content: '\2013';
+}
+.faq summary:hover {
+  color: var(--red);
+}
+.faq p {
+  padding: 0 24px 24px;
+  max-width: 640px;
+}
+
+/* Footer extras */
+.footer-gap {
+  margin-top: 16px;
+}
+.footer-links .label {
+  margin-bottom: 4px;
+}
+
+@media (max-width: 640px) {
+  .stat {
+    padding: 20px;
+  }
+  .service-tile {
+    min-height: 0;
+  }
 }

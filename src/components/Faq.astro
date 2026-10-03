@@ -1,0 +1,21 @@
+---
+// Questions and answers that open and close (no JavaScript needed).
+import Kicker from './Kicker.astro';
+import { faqs } from '../data/site.js';
+
+const { num = '06' } = Astro.props;
+---
+<section class="section faq-section">
+  <div>
+    <Kicker num={num}>Questions</Kicker>
+    <h2 class="head h-lg">Straight answers</h2>
+  </div>
+  <div class="faq-list">
+    {faqs.map((f, i) => (
+      <details class="faq" open={i === 0}>
+        <summary>{f.q}</summary>
+        <p>{f.a}</p>
+      </details>
+    ))}
+  </div>
+</section>
