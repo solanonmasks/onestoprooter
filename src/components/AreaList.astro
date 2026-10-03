@@ -1,0 +1,7 @@
+---
+// The master list of cities we serve.
+import { areas } from '../data/site.js';
+---
+<ul class="areas">
+  {areas.map((city) => <li>{city}</li>)}
+</ul>

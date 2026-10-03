@@ -1,0 +1,105 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AreaList from '../components/AreaList.astro';
+import { site } from '../data/site.js';
+---
+<BaseLayout
+  title={`Contact | ${site.name}`}
+  description={`Call ${site.phone}, any hour, any day. Or ask for a free estimate. Family-owned plumber in Burnaby, BC, serving the Lower Mainland.`}
+  active="contact"
+>
+  <section class="contact-top">
+    <div class="contact-info dark">
+      <h1 class="head h-hero">Your prompt, local plumber</h1>
+      <p class="lead">The fastest way to reach us is the phone. Someone picks up 24 hours a day, every day of the year.</p>
+      <a class="big-phone" href={site.phoneHref}>{site.phone}</a>
+      <div class="facts">
+        <div><div class="label">Hours</div><div>Open 24/7</div></div>
+        <div><div class="label">Based in</div><div>{site.city}, {site.region}</div></div>
+        <div><div class="label">Customers</div><div>Homes and businesses</div></div>
+      </div>
+    </div>
+
+    <div class="contact-form-wrap grey">
+      <!--
+        The form is set up for Netlify Forms (free tier). If the site is hosted
+        on Netlify, submissions show up in the Netlify dashboard and can be
+        emailed to the client. See README.md for other hosting options.
+      -->
+      <form
+        class="estimate-form"
+        name="estimate"
+        method="POST"
+        action="/thanks/"
+        data-netlify="true"
+        netlify-honeypot="company"
+        data-estimate-form
+      >
+        <input type="hidden" name="form-name" value="estimate" />
+        <p class="hp-field" aria-hidden="true">
+          <label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label>
+        </p>
+
+        <h2 class="head h-md">Not urgent? Get a free estimate</h2>
+        <p>Tell us what's going on and we'll call you back with a price.</p>
+
+        <label>Name
+          <input name="name" required autocomplete="name" />
+        </label>
+        <label>Phone
+          <input name="phone" type="tel" required autocomplete="tel" />
+        </label>
+        <label><span>Email <span class="optional">(optional)</span></span>
+          <input name="email" type="email" autocomplete="email" />
+        </label>
+        <label>What needs fixing?
+          <textarea name="message" rows="4"></textarea>
+        </label>
+
+        <p class="form-error" role="alert" hidden data-form-error>
+          Sorry, that didn't go through. Please call us at <a href={site.phoneHref}>{site.phone}</a>.
+        </p>
+
+        <button class="btn btn-black" type="submit">Send request</button>
+      </form>
+
+      <div class="form-success" hidden data-form-success tabindex="-1">
+        <h2 class="head">Got it. We'll call you back.</h2>
+        <p>Leaking right now? Don't wait for us. Call <a class="text-link" href={site.phoneHref}>{site.phone}</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section areas-section">
+    <h2 class="head h-lg">Service areas</h2>
+    <AreaList />
+  </section>
+
+  <script>
+    // Send the form in the background and show the success message on the same page.
+    // If JavaScript is off, the form still posts normally and lands on /thanks/.
+    const form = document.querySelector('[data-estimate-form]');
+    const success = document.querySelector('[data-form-success]');
+    const error = document.querySelector('[data-form-error]');
+    if (form && success && error) {
+      form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        error.hidden = true;
+        try {
+          const body = new URLSearchParams(new FormData(form)).toString();
+          const res = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body,
+          });
+          if (!res.ok) throw new Error('Form failed: ' + res.status);
+          form.hidden = true;
+          success.hidden = false;
+          success.focus();
+        } catch (err) {
+          error.hidden = false;
+        }
+      });
+    }
+  </script>
+</BaseLayout>

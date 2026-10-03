@@ -1,0 +1,11 @@
+---
+// Fallback "thank you" page for the estimate form when JavaScript is off.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site.js';
+---
+<BaseLayout title={`Thanks | ${site.name}`} description="We got your request and will call you back." active="contact">
+  <section class="section">
+    <h1 class="head h-lg">Got it. We'll call you back.</h1>
+    <p class="lead" style="margin-top:24px">Leaking right now? Don't wait for us. Call <a class="text-link" href={site.phoneHref}>{site.phone}</a>.</p>
+  </section>
+</BaseLayout>

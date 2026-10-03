@@ -1,0 +1,4 @@
+# Settings for hosting on Netlify (optional; only used if the site is hosted there).
+[build]
+  command = "npm run build"
+  publish = "dist"

@@ -1,0 +1,145 @@
+---
+// The frame every page sits in: <head>, header, footer and mobile call bar.
+import '../styles/global.css';
+import { site, areas } from '../data/site.js';
+
+const {
+  title,
+  description,
+  // Which nav item to underline: 'home' | 'services' | 'water-heaters' | 'contact'
+  active = '',
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, site.url).href;
+
+const nav = [
+  { key: 'home', label: 'Home', href: '/' },
+  { key: 'services', label: 'Services', href: '/#services' },
+  { key: 'water-heaters', label: 'Water heaters', href: '/services/water-heaters/' },
+  { key: 'contact', label: 'Contact', href: '/contact/' },
+];
+
+// Structured data so search engines know this is a 24/7 plumber in Burnaby.
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Plumber',
+  name: site.name,
+  url: site.url,
+  telephone: '+1-' + site.phone,
+  image: new URL('/images/hero-plumber.webp', site.url).href,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: site.city,
+    addressRegion: site.region,
+    addressCountry: 'CA',
+  },
+  openingHours: 'Mo-Su 00:00-23:59',
+  areaServed: areas.map((name) => ({ '@type': 'City', name })),
+};
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/images/hero-plumber.webp', site.url).href} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800;900&family=Barlow:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="header-bar">
+        <a class="wordmark" href="/" aria-label={`${site.name}, home`}>
+          <span class="w1">One Stop</span>
+          <span class="w2">Rooter Plumbing</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Main">
+          {nav.map((item) => (
+            <a href={item.href} aria-current={item.key === active ? 'page' : undefined}>{item.label}</a>
+          ))}
+        </nav>
+
+        <a class="header-call" href={site.phoneHref}>
+          <span class="l1">Call 24/7</span>
+          <span class="l2">{site.phone}</span>
+        </a>
+
+        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-nav" data-menu-btn>
+          Menu
+        </button>
+      </div>
+
+      <nav class="mobile-nav" id="mobile-nav" aria-label="Main" hidden>
+        {nav.map((item) => (
+          <a href={item.href} aria-current={item.key === active ? 'page' : undefined}>{item.label}</a>
+        ))}
+      </nav>
+    </header>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <div class="footer-cols">
+        <a class="wordmark" href="/" aria-label={`${site.name}, home`}>
+          <span class="w1">One Stop</span>
+          <span class="w2">Rooter Plumbing</span>
+        </a>
+        <div>
+          <div class="label">Call 24/7</div>
+          <a class="footer-phone" href={site.phoneHref}>{site.phone}</a>
+        </div>
+        <div>
+          <div class="label">Based in</div>
+          <div>{site.city}, {site.region}</div>
+        </div>
+        <div class="footer-links">
+          <div class="label">Pages</div>
+          <a href="/#services">Services</a>
+          <a href="/contact/">Contact</a>
+          {site.privacyPolicyUrl && <a href={site.privacyPolicyUrl}>Privacy policy</a>}
+        </div>
+      </div>
+      <p class="copyright">
+        © {new Date().getFullYear()} {site.name}. Family-owned, locally operated. Licensed, bonded and insured.
+      </p>
+    </footer>
+
+    <a class="call-bar" href={site.phoneHref}>Call {site.phone}</a>
+
+    <script>
+      // Mobile menu: open/close toggle, closes when a link is chosen.
+      const btn = document.querySelector('[data-menu-btn]');
+      const menu = document.getElementById('mobile-nav');
+      if (btn && menu) {
+        const setOpen = (open) => {
+          menu.hidden = !open;
+          btn.setAttribute('aria-expanded', String(open));
+          btn.textContent = open ? 'Close' : 'Menu';
+        };
+        btn.addEventListener('click', () => setOpen(menu.hidden));
+        menu.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => setOpen(false)));
+      }
+    </script>
+  </body>
+</html>

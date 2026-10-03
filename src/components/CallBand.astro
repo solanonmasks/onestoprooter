@@ -1,0 +1,18 @@
+---
+// Red band with a big headline and a black phone button.
+import { site } from '../data/site.js';
+
+const { title, text = '', link = null } = Astro.props;
+---
+<section class="call-band red">
+  <div>
+    <h2 class="head h-band">{title}</h2>
+    {(text || link) && (
+      <p>
+        {text}{' '}
+        {link && <a href={link.href}>{link.label}</a>}
+      </p>
+    )}
+  </div>
+  <a class="btn btn-black btn-phone" href={site.phoneHref}>{site.phone}</a>
+</section>

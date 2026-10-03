@@ -1,0 +1,84 @@
+---
+// One template, nine pages. Content comes from src/data/services.js
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CallBand from '../../components/CallBand.astro';
+import { site } from '../../data/site.js';
+import { services } from '../../data/services.js';
+
+export function getStaticPaths() {
+  return services.map((service) => ({
+    params: { slug: service.slug },
+    props: { service },
+  }));
+}
+
+const { service: s } = Astro.props;
+const others = services.filter((x) => x.slug !== s.slug);
+---
+<BaseLayout
+  title={`${s.name} in the Lower Mainland | ${site.name}`}
+  description={`${s.intro} Open 24/7. Call ${site.phone}.`}
+  active={s.slug === 'water-heaters' ? 'water-heaters' : 'services'}
+>
+  <section class="two-col dark service-hero">
+    <div class="hero-text">
+      <p class="breadcrumb"><a href="/#services">Services</a> / {s.name}</p>
+      <h1 class="head h-hero">{s.h1}</h1>
+      <p class="lead">{s.intro}</p>
+      <div class="btn-row">
+        <a class="btn btn-red btn-call-service" href={site.phoneHref}>Call {site.phone}</a>
+        <span class="estimate-link">Free estimate. Senior discounts.</span>
+      </div>
+    </div>
+    <div class="photo">
+      <!-- TODO: swap in a service-specific photo when the client supplies one -->
+      <img
+        src="/images/hero-plumber.webp"
+        alt="Plumber repairing the drain pipes under a kitchen sink"
+        style="object-position:65% 50%"
+      />
+    </div>
+  </section>
+
+  <section class="signs-section">
+    <h2 class="head h-lg">{s.signsTitle}</h2>
+    <ul class="sign-grid">
+      {s.signs.map((sign) => <li>{sign}</li>)}
+    </ul>
+  </section>
+
+  <section class="sub-grid" aria-label={`${s.name} services`}>
+    {s.subs.map((sub) => (
+      <div class="sub-tile">
+        <h3>{sub.name}</h3>
+        <p>{sub.desc}</p>
+      </div>
+    ))}
+  </section>
+
+  <section class="feature grey">
+    <h2 class="head h-lg">{s.feature.title}</h2>
+    <div class="feature-body">
+      <p class="lead">{s.feature.text}</p>
+      {s.feature.list && (
+        <ul>
+          {s.feature.list.map((item) => <li>{item}</li>)}
+        </ul>
+      )}
+      {s.feature.link && (
+        <p><a class="text-link" href={s.feature.link.href}>{s.feature.link.label}</a></p>
+      )}
+    </div>
+  </section>
+
+  <CallBand title={s.band.title} text={s.band.text} link={s.band.link} />
+
+  <section class="other-services">
+    <h2 class="head h-md">Other services</h2>
+    <ul class="link-grid">
+      {others.map((x) => (
+        <li><a href={`/services/${x.slug}/`}>{x.name}</a></li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>
